@@ -189,7 +189,7 @@ root@otus-PC:/home/otus#
 
 Добавим доступ для всех, т.к. это тестовая среда внутри сети, допустим полный доступ
 
-pg\_hba.conf
+pg_hba.conf
 ```
 host    all             all             0.0.0.0/0               trust
 ```
@@ -197,7 +197,7 @@ host    all             all             0.0.0.0/0               trust
 Добавил возможность сетевого входа
 postgresql.confg
 ```
-listen\_addresses = '\*'  
+listen_addresses = '\*'  
 ```
 
 Сделаем рестарт постгре и пробуем подключиться из-под любого клиента.
@@ -212,7 +212,7 @@ listen\_addresses = '\*'
 2. В первой сессии создам таблицу и наполняем ее данными:
 ```
 create table test(text_field text, number_field integer);
-daemom=*# insert into test(text_field, number_field) values('value 1', 10), ('value 2', 50); 
+insert into test(text_field, number_field) values('value 1', 10), ('value 2', 50); 
 commit;
 ```
 3. Проверяем уровень изоляции:
