@@ -205,5 +205,106 @@ listen\_addresses = '\*'
 
 ### Работа с уровнями изоляций
 
+1. Выключаем auto commit:
+```
+\set AUTOCOMMIT off
+```
+2. В первой сессии создам таблицу и наполняем ее данными:
+```
+create table test(text_field text, number_field integer);
+daemom=*# insert into test(text_field, number_field) values('value 1', 10), ('value 2', 50); 
+commit;
+```
+3. Проверяем уровень изоляции:
+```
+SHOW transaction_isolation;
+ transaction_isolation
+-----------------------
+ read committed
+(1 row)
+```
+4. Начинаем новые транзакции:
+```
+begin;
+```
+5. Добавляем новые данные в первой сессии:
+```
+insert into test(text_field, number_field) values('value 3', 100);
+```
+6. Выполняем запрос во второй сессии:
+```
+select * from test;
+ text_field | number_field
+------------+-------------
+ value 1    | 10
+ value 2    | 50
+```  
+Новой записи нет из-за того, что мы не закоммитили в первой сессии вставку строки, а уровень изоляции у нас read committed.  
 
+7. Завершаем первую транзакцию:  
+```
+commit;
+```
+8. Выполняем запрос во второй сессии:
+```
+select * from test;
+ text_field | number_field
+------------+-------------
+ value 1    | 10
+ value 2    | 50
+ value 3    | 100
+ ```
+  Новая запись появилась потому, что мы закоммитили изменения и запись стала доступна для чтения поскольку уровень изоляции у нас read committed.
 
+9. Начинаем новые транзакции с repeatable read уровнем изоляции:
+```
+BEGIN isolation level repeatable read;
+```
+10. Добавляем данные в первой сессии:
+```
+insert into test(text_field, number_field) values('value 4', 150);
+```
+11. Выполняем запрос во второй сессии:
+```
+select * from test;
+ text_field | number_field
+------------+-------------
+ value 1    | 10
+ value 2    | 50
+ value 3    | 100
+(3 rows)
+```
+Новой записи нет из-за того, что мы используем уровень изоляции repeatable read и нам не видны изменения данных из первой сессии.  
+
+12. Завершаем первую транзакцию:
+```
+commit;
+```
+13. Выполняем запрос во второй сессии:
+``` 
+select * from test;
+ text_field | number_field
+------------+-------------
+ value 1    | 10
+ value 2    | 50
+ value 3    | 100
+(3 rows)
+``` 
+Нам до сих пор не доступны данные из первой сессии, поскольку мы находимся внтури своей сессии с уровенем изоляции repeatable read.  
+
+14. Завершаем вторую транзацию:
+``` 
+commit;
+```
+15. Выполняем запрос во второй сессии:
+```
+select * from test;
+ text_field | number_field
+------------+-------------
+ value 1    | 10
+ value 2    | 50
+ value 3    | 100
+ value 4    | 150
+(4 rows)
+```
+Мы видим 4 строки поскольку мы закончили свою транзакцию и нам теперь "видны" все изменения из первой сессии.
