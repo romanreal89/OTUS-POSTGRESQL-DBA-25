@@ -4,6 +4,7 @@
 Будем использовать ВМ из предыдущих ДЗ.
 ВМ создана на базе Proxmox Virtual Environment 8.4.14.
 
+### Тестирование и тюнинг
 Первый запуск pgbench на дефолтных настройках
 ```
 root@otus-PC:/home/otus# sudo -u postgres pgbench -c 50 -j 2 -P 10 -T 60 postgres
