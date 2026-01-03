@@ -34,10 +34,48 @@ INSERT INTO projects (project_name, employee_id) VALUES ('Проект 1', 1),('
 ### Запросы
 
 #### Внутреннее соединение (INNER JOIN)
-
 ```
 SELECT e.first_name, e.last_name, d.department_name
 FROM employees e
 JOIN departments d ON e.department_id = d.department_id;
 ```
 Запрос вернёт сотрудников, у которых указан отдел.
+
+#### Левостороннее соединение (LEFT JOIN)
+```
+SELECT e.first_name, e.last_name, d.department_name
+FROM employees e
+LEFT JOIN departments d ON e.department_id = d.department_id;
+```
+Все сотрудники будут в результате, даже если у них нет указанного отдела. Для таких сотрудников department_name будет NULL.
+
+#### Правостороннее соединение (RIGHT JOIN)
+```
+SELECT e.first_name, e.last_name, d.department_name
+FROM employees e
+RIGHT JOIN departments d ON e.department_id = d.department_id;
+```
+Все отделы будут в результате, даже если в них нет сотрудников. Для отделов без сотрудников first_name и last_name будут NULL.
+#### Кросс-соединение (CROSS JOIN)
+```
+SELECT e.first_name, e.last_name, d.department_name
+FROM employees e
+CROSS JOIN departments d;
+```
+Этот запрос аналогичен следующему
+```
+SELECT e.first_name, e.last_name, d.department_name
+FROM employees e, departments d;
+```
+Каждая запись из employees соединится с каждой записью из departments. 
+Если в employees 4 записи, а в departments 3, результат будет содержать 12 строк.
+#### Полное соединение (FULL JOIN)
+```
+SELECT e.first_name, e.last_name, d.department_name
+FROM employees e
+FULL JOIN departments d ON e.department_id = d.department_id;
+```
+В результате будут:
+	все сотрудники (даже без отдела);
+	все отделы (даже без сотрудников).
+#### Комбинированный запрос с разными типами соединений
