@@ -79,3 +79,11 @@ FULL JOIN departments d ON e.department_id = d.department_id;
 	все сотрудники (даже без отдела);
 	все отделы (даже без сотрудников).
 #### Комбинированный запрос с разными типами соединений
+```
+SELECT e.first_name, e.last_name, d.department_name, p.project_name
+FROM employees e
+JOIN departments d ON e.department_id = d.department_id
+LEFT JOIN projects p ON e.employee_id = p.employee_id;
+```
+Выбираем сотрудников, у которых есть отделы.
+Если проект отсутсвует будет NULL в соответствующем поле.
