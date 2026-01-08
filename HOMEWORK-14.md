@@ -120,21 +120,21 @@ CREATE PUBLICATION
 
 #### Проверяем репликацию
 Вставляем данные на первом сервере в таблицу customers:   
-![INSCAST](https://github.com/romanreal89/OTUS-POSTGRESQL-DBA-25/blob/main/data_cast.JPG?raw=true)
+![INSCAST](https://github.com/romanreal89/OTUS-POSTGRESQL-DBA-25/blob/main/_data_cast.JPG?raw=true)
 
 Проверяем таблицу на втором сервере:
-![DATACAST2](https://github.com/romanreal89/OTUS-POSTGRESQL-DBA-25/blob/main/cast02.JPG?raw=true)
+![DATACAST2](https://github.com/romanreal89/OTUS-POSTGRESQL-DBA-25/blob/main/_cast02.JPG?raw=true)
 
 Проверяем таблицу на третьем сервере:
 ![DATACAST3](https://github.com/romanreal89/OTUS-POSTGRESQL-DBA-25/blob/main/cast_03.JPG?raw=true)
 
 Вставляем данные на втором сервере в таблицу orders:  
-![INSORD](https://github.com/romanreal89/OTUS-POSTGRESQL-DBA-25/blob/main/data_ord.JPG?raw=true)
+![INSORD](https://github.com/romanreal89/OTUS-POSTGRESQL-DBA-25/blob/main/_data_ord.JPG?raw=true)
 
 Проверяем таблицу на первом сервере:
-![DATAORD1](https://github.com/romanreal89/OTUS-POSTGRESQL-DBA-25/blob/main/orders_01.JPG?raw=true)
+![DATAORD1](https://github.com/romanreal89/OTUS-POSTGRESQL-DBA-25/blob/main/_orders_01.JPG?raw=true)
 
 Проверяем таблицу на третьем сервере:
-![DATAORD3](https://github.com/romanreal89/OTUS-POSTGRESQL-DBA-25/blob/main/orders_03.JPG?raw=true)
+![DATAORD3](https://github.com/romanreal89/OTUS-POSTGRESQL-DBA-25/blob/main/_orders_03.JPG?raw=true)
 
 Видим, что данные подтянулись во все таблицы. Все работает успешно.
