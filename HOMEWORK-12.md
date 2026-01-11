@@ -35,24 +35,27 @@ BEGIN
               VALUES (tbl.good_name, tbl.sum_sale);
 			  RETURN NEW;
 
-        WHEN 'DELETE' THEN
-			with tbl as (
-	            SELECT G.good_name, COALESCE(sum(G.good_price * S.sales_qty),0) sum_sale
-                FROM pract_functions.goods G
-                LEFT JOIN pract_functions.sales S ON S.good_id = G.goods_id
-				where G.goods_id=old.good_id
-                GROUP BY G.good_name
-                    )
-              merge INTO pract_functions.good_sum_mart ca
-              using tbl
-                   on ca.good_name=tbl.good_name
-              WHEN MATCHED  THEN 
-              UPDATE SET sum_sale = tbl.sum_sale
-              WHEN NOT MATCHED THEN
-              INSERT (good_name, sum_sale)
-              VALUES (tbl.good_name, tbl.sum_sale)
-			 WHEN MATCHED and tbl.sum_sale=0 then delete;
-			 RETURN OLD;
+	WHEN 'DELETE' THEN
+	    WITH tbl AS (
+	        SELECT 
+	            G.good_name,
+	            COALESCE(SUM(G.good_price * S.sales_qty), 0) AS sum_sale
+	        FROM pract_functions.goods G
+	        LEFT JOIN pract_functions.sales S ON S.good_id = G.goods_id
+	        WHERE G.goods_id = OLD.good_id
+	        GROUP BY G.good_name
+	    )
+	    MERGE INTO pract_functions.good_sum_mart ca
+	    USING tbl
+	        ON ca.good_name = tbl.good_name
+	    WHEN MATCHED AND tbl.sum_sale = 0 THEN  -- Удаляем, если сумма = 0
+	        DELETE
+	    WHEN MATCHED THEN  -- Обновляем, если сумма > 0
+	        UPDATE SET sum_sale = tbl.sum_sale
+	    WHEN NOT MATCHED THEN
+	        INSERT (good_name, sum_sale)
+	        VALUES (tbl.good_name, tbl.sum_sale);
+	    RETURN OLD;
 
         WHEN 'UPDATE' THEN
 					with tbl as (
